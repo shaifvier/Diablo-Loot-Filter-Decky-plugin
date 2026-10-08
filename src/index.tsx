@@ -1,8 +1,8 @@
-import { ButtonItem, DropdownItem, PanelSection, PanelSectionRow, TextField, ToggleField, staticClasses } from "@decky/ui";
+import { ButtonItem, DropdownItem, Focusable, PanelSection, PanelSectionRow, TextField, ToggleField, staticClasses, type FocusableProps } from "@decky/ui";
 import { callable, definePlugin, toaster } from "@decky/api";
-import { Component, useEffect, useRef, useState, useSyncExternalStore, type CSSProperties, type ReactNode, type ErrorInfo } from "react";
+import { Component, useEffect, useRef, useState, useSyncExternalStore, type ComponentType, type CSSProperties, type ReactNode, type ErrorInfo, type RefAttributes } from "react";
 import { FaGem } from "react-icons/fa";
-import type { Build, Catalogue, CopyResult, FilterDetail, FilterSummary, Reply } from "./types";
+import type { Build, Catalogue, CopyResult, FilterDetail, FilterSummary, Reply, RulePreview } from "./types";
 
 const listFilters = callable<[refresh: boolean], Reply<Catalogue>>("list_filters");
 const getFilter = callable<[id: string], Reply<FilterDetail>>("get_filter");
@@ -24,6 +24,22 @@ function date(value: string | null): string {
 }
 function Note({ children }: { children: ReactNode }) {
   return <PanelSectionRow><div style={small}>{children}</div></PanelSectionRow>;
+}
+// Steam supports explicit focusable navigation nodes; @decky/ui's current
+// FocusableProps does not yet declare that native property.
+const RuleFocusable = Focusable as ComponentType<FocusableProps & RefAttributes<HTMLDivElement> & { focusable: boolean }>;
+function RuleCard({ rule, index }: { rule: RulePreview; index: number }) {
+  const element = useRef<HTMLDivElement>(null);
+  const reveal = () => element.current?.scrollIntoView({ block: "nearest", inline: "nearest" });
+  return <PanelSectionRow><RuleFocusable ref={element} focusable tabIndex={0}
+    className="d4-rule-card" focusClassName="d4-rule-focused"
+    aria-label={`Rule ${index + 1}: ${rule.name}, ${rule.action}${rule.enabled ? "" : ", disabled"}`}
+    onFocus={reveal} onGamepadFocus={reveal}
+    style={{ ...small, ...card, borderLeft: `3px solid ${rule.color ?? "#6f7b8c"}` }}>
+    <strong style={{ color: "#e5e9ef" }}>{index + 1}. {rule.name}</strong>
+    <div>{rule.action}{rule.enabled ? "" : " · Disabled"}</div>
+    {rule.conditions.map((condition, i) => <div key={i}>{condition}</div>)}
+  </RuleFocusable></PanelSectionRow>;
 }
 function Select({ label, value, values, onChange }: { label: string; value: string; values: string[]; onChange: (value: string) => void }) {
   return <PanelSectionRow><DropdownItem label={label} selectedOption={value}
@@ -149,6 +165,7 @@ function Content() {
   }
 
   return <>
+    <style>{`.d4-rule-card:focus, .d4-rule-card.d4-rule-focused { outline: 2px solid ${gold}; outline-offset: -2px; }`}</style>
     <PanelSection>
       <Note><span style={{ color: gold }}>DIABLO IV</span> · Native loot filters</Note>
       {detail ? <PanelSectionRow><ButtonItem disabled={busy} onClick={() => { setDetail(null); setCopyStatus(null); }}>← Back to {tab === "browse" ? "filters" : "build"}</ButtonItem></PanelSectionRow>
@@ -180,11 +197,8 @@ function Content() {
         {showCode && <Note><div style={{ ...card, fontFamily: "monospace", wordBreak: "break-all", userSelect: "text" }}>{detail.code}</div></Note>}
       </PanelSection>
       <PanelSection title="Rules · first match wins">
-        {detail.preview.rules.map((rule, index) => <Note key={index}><div style={{ ...card, borderLeft: `3px solid ${rule.color ?? "#6f7b8c"}` }}>
-          <strong style={{ color: "#e5e9ef" }}>{index + 1}. {rule.name}</strong>
-          <div>{rule.action}{rule.enabled ? "" : " · Disabled"}</div>
-          {rule.conditions.map((condition, i) => <div key={i}>{condition}</div>)}
-        </div></Note>)}
+        <Note>Move down with the D-pad or left stick to read each rule.</Note>
+        {detail.preview.rules.map((rule, index) => <RuleCard key={index} rule={rule} index={index} />)}
       </PanelSection>
     </> : tab === "browse" ? <>
       <PanelSection title="Find your filter">

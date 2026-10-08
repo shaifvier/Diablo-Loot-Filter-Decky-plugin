@@ -1,6 +1,6 @@
 {
   "name": "diablo-loot-filters",
-  "version": "0.1.0",
+  "version": "0.1.1",
   "description": "Browse and generate native Diablo IV loot filters in Decky game mode.",
   "type": "module",
   "license": "MIT",

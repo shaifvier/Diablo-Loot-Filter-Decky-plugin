@@ -11,11 +11,11 @@ Steam on Linux/SteamOS. The backend requires no pip packages or browser runtime.
 ## Install
 
 1. Install [Decky Loader](https://github.com/SteamDeckHomebrew/decky-loader).
-2. Download `diablo-loot-filters-v0.1.0.zip` from this repository's
+2. Download `diablo-loot-filters-v0.1.1.zip` from this repository's
    [Releases](https://github.com/shaifvier/Diablo-Loot-Filter-Decky-plugin/releases).
 3. In game mode, open Decky settings → Developer, enable developer mode if
    needed, and choose **Install Plugin from ZIP**. Use the release asset's URL:
-   `https://github.com/shaifvier/Diablo-Loot-Filter-Decky-plugin/releases/download/v0.1.0/diablo-loot-filters-v0.1.0.zip`.
+   `https://github.com/shaifvier/Diablo-Loot-Filter-Decky-plugin/releases/download/v0.1.1/diablo-loot-filters-v0.1.1.zip`.
 4. Open **Diablo Loot Filters** in the Decky panel.
 
 The ZIP contains a `diablo-loot-filters/` directory, the compiled frontend, Python
@@ -30,6 +30,7 @@ are modified.
   stage, strictness and season selectors. General `All`-class filters remain
   available alongside the selected class's filters.
 - Open a filter to inspect its source, season, checked date and ordered rules.
+  Move down with the D-pad or left stick to focus each rule and scroll the preview.
   The first matching rule wins. Published codes retain their original rules.
 - Press **Copy import code**, close Decky, and in Diablo open **Options →
   Gameplay → Loot Filter → New Filter → Import Loot Filter**. Paste with

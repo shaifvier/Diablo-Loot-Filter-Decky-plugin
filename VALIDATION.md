@@ -1,4 +1,4 @@
-# Release 0.1.0 validation
+# Release 0.1.1 validation
 
 Checked on 2026-10-08, CachyOS, gamescope, Decky Loader v3.2.9, Steam React 19.1.1.
 
@@ -24,6 +24,11 @@ Checked on 2026-10-08, CachyOS, gamescope, Decky Loader v3.2.9, Steam React 19.1
 - Search-clear regression: enter a query with no matches, press Clear search,
   and confirm the textbox empties and results return. The button is disabled
   when the query is empty.
+- Rule scrolling regression: Blood Wave Maxroll Medium has nine rule cards,
+  all registered as native focusable nodes. Steam's directional navigation can
+  focus rules below the initial viewport; focusing the last card scrolls it fully
+  into view. The user confirmed controller scrolling reaches all nine rules.
+  The existing Decky scroll container remains in use.
 - Persistent X11 transfer on live `:0` (Steam) and `:1` (Diablo IV through the
   NonSteamLaunchers Proton prefix), with independent UTF8_STRING and STRING reads.
 - The real Copy button places the exact selected 1,324-character code on both
@@ -49,6 +54,10 @@ The user then found that native dropdown choices reverted to Any. Steam closes
 and remounts the quick-access panel while showing its native selection menu.
 Panel state now survives that remount, including callbacks from the open menu;
 the class and build regression above uses the real native menu options.
+
+Rule previews initially contained static text after the final button, so
+controller navigation had no further focus target to scroll to. Release 0.1.1
+makes each rule a native focusable card and reveals it when focused.
 
 ## Not yet established
 
