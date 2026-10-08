@@ -1,0 +1,10 @@
+{
+  "name": "Diablo Loot Filters",
+  "author": "shaifvier",
+  "flags": [],
+  "api_version": 1,
+  "publish": {
+    "tags": ["utility", "Diablo IV", "loot filters"],
+    "description": "Browse public loot filters, generate from Maxroll builds, and copy codes into Diablo IV in gamescope."
+  }
+}
