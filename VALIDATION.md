@@ -54,8 +54,7 @@ the class and build regression above uses the real native menu options.
   encoding are independently verified; they do not prove game acceptance.
 - The directly installed Steam edition and a physical Steam Deck have not been
   tested. Display discovery covers both launcher paths without hardcoded app IDs.
-- The prepared CI includes an isolated Xvfb/xclip test. GitHub rejected workflow
-  publication because the available token lacks `workflow` scope; activation and
-  a remote CI result remain pending. See `ci/build.yml` and the README.
+- CI includes an isolated Xvfb/xclip test; its remote result is recorded separately
+  by GitHub Actions.
 - Codes from older seasons may not represent current build priorities. Unmapped
   new seasonal items keep strict generation disabled for those variants.

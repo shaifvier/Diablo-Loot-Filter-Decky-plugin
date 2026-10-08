@@ -106,12 +106,6 @@ clipboard reader. To run that check locally:
 xvfb-run -a python3 tests/check_clipboard.py
 ```
 
-The Actions workflow is prepared in [ci/build.yml](ci/build.yml). Activation is
-pending because the publishing token currently lacks GitHub's `workflow` scope.
-After granting that scope, move this file to `.github/workflows/build.yml` and
-push it; Actions will run type checking, backend tests, packaging and the isolated
-clipboard check on pushes and pull requests.
-
 No network access is needed for the unit tests. The fixtures preserve current
 Maxroll gear/variant fields and a small catalogue excerpt, including a malformed
 published code. See [VALIDATION.md](VALIDATION.md) for checks performed for this
