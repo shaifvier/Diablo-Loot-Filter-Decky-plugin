@@ -191,6 +191,7 @@ function Content() {
         <Select label="Class" value={className} values={unique(filters.map(f => f.className))} onChange={value => { setClass(value); setBuildName("Any"); setLimit(12); }} />
         <Select label="Build" value={buildName} values={unique(classFilters.map(f => f.buildName))} onChange={value => { setBuildName(value); setLimit(12); }} />
         <PanelSectionRow><TextField label="Search" description="Build or creator" value={query} onChange={e => { setQuery(e.target.value); setLimit(12); }} /></PanelSectionRow>
+        <PanelSectionRow><ButtonItem disabled={!query} onClick={() => { setQuery(""); setLimit(12); }}>Clear search</ButtonItem></PanelSectionRow>
         <PanelSectionRow><ToggleField label="More filters" checked={advanced} onChange={setAdvanced} /></PanelSectionRow>
         {advanced && <>
           <Select label="Stage" value={stage} values={unique(filters.map(f => f.stage))} onChange={setStage} />

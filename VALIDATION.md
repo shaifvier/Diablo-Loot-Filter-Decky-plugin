@@ -21,6 +21,9 @@ Checked on 2026-10-08, CachyOS, gamescope, Decky Loader v3.2.9, Steam React 19.1
   Decky and confirm 17 matching/class-independent filters; choose Minion
   Necromancer and confirm one matching filter. Both selections survive closing
   and reopening the quick-access panel.
+- Search-clear regression: enter a query with no matches, press Clear search,
+  and confirm the textbox empties and results return. The button is disabled
+  when the query is empty.
 - Persistent X11 transfer on live `:0` (Steam) and `:1` (Diablo IV through the
   NonSteamLaunchers Proton prefix), with independent UTF8_STRING and STRING reads.
 - The real Copy button places the exact selected 1,324-character code on both
