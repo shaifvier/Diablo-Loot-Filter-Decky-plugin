@@ -12,9 +12,11 @@
   `backend/vendor/NOTICE.md`. Our bounded reader and Maxroll adapter are original.
 - Catalogue codes and metadata are retrieved from public pages at
   https://diablo4lootfilter.com, with their source attribution retained.
-  Maxroll planner data comes from public planner profiles. Small operational-data
-  excerpts in `tests/fixtures` capture the provider contracts as of 2026-10-08;
-  fixture guide prose, skill trees and paragon boards are omitted.
+  Maxroll planner data comes from public planner profiles. Operational-data
+  fixtures in `tests/fixtures` capture provider contracts as of 2026-10-08.
+  Viewer fixtures retain coordinates, connections, board grids and identifier
+  mappings for Blood Wave and Rain of Arrows; guide and tooltip prose is omitted.
+  See `tests/fixtures/viewer/README.md` for source details.
 
 Diablo IV is a trademark of Blizzard Entertainment. This project is unofficial
 and is not affiliated with Blizzard, Maxroll, or the catalogue provider.

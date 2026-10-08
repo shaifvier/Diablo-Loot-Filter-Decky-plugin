@@ -1,0 +1,7 @@
+{
+  "name": "Diablo Loot Filters Preview",
+  "author": "shaifvier",
+  "flags": [],
+  "api_version": 1,
+  "publish": {"tags": ["utility", "Diablo IV", "build viewer"], "description": "Preview of the full-screen Maxroll build viewer, with an independent cache and paragon checklists."}
+}

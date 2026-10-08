@@ -1,4 +1,100 @@
-# Diablo Loot Filters for Decky
+# Diablo Loot Filters Preview · 0.2.0-beta.1
+
+This feature branch adds a full-screen Maxroll build reference viewer with
+**Gear, Skills and Paragon** tabs and manual character checklists. It is based on
+`v0.1.1`; the stable release and `main` remain available separately.
+
+## Install the preview
+
+1. Download `diablo-loot-filters-preview-v0.2.0-beta.1.zip` from the
+   [beta release](https://github.com/shaifvier/Diablo-Loot-Filter-Decky-plugin/releases/tag/v0.2.0-beta.1).
+2. Open Decky settings → Developer → **Install Plugin from ZIP** and select the
+   downloaded local ZIP. Its URL is also available on the release page.
+3. Open **Diablo Loot Filters Preview**. Keep **Diablo Loot Filters** installed
+   for the stable loot-filter experience.
+
+The preview has its own plugin identity, full-screen route, runtime cache and
+character-progress files. On first start it copies public saved filters and
+builds from the stable cache if available. Those copies become independent;
+preview refreshes, generation and checklists never write to the stable cache.
+Installing or uninstalling the preview does not replace the stable plugin.
+
+## View a build
+
+Open **Saved builds · full-screen viewer**, then choose a saved build. To add one,
+use the existing Maxroll guide/planner loader, select a variant and press
+**View build · full screen**. A Maxroll published filter's details also offer
+**View source build**. English Maxroll references are supported in this beta.
+
+- **Gear:** equipment by slot, item names, natural and implicit affixes, separate
+  tempering, aspects, source rolls and sockets when the planner supplies them.
+- **Skills:** equipped skill bar, source steps, allocated ranks and upgrades,
+  zoomable connected tree and allocation list. Select a node to read its details.
+- **Paragon:** one board at a time, source board order and clockwise rotation,
+  allocated nodes, glyph and level, source steps and an allocation list.
+
+| Controller | Action |
+| --- | --- |
+| LB / RB | Previous / next tab |
+| D-pad | Move between native focus targets, including map nodes |
+| LT / RT | Zoom out / in |
+| Y | Fit map |
+| A | Open node details / activate control |
+| X | Mark an allocated paragon node completed, or undo the mark |
+| B | Close details / return to the previous Steam screen |
+
+Visible buttons, dropdowns and clickable map nodes provide mouse/touch controls.
+Returning to the viewer preserves the selected build, variant, tab, source step,
+board and zoom during the plugin session. Only the active diagram is rendered.
+Steam's Back action returns to the previous screen; when opened over a running
+game, close any remaining Steam overlay to resume playing.
+
+## Character checklists and source changes
+
+Use **Manage characters** to add, rename or delete named local profiles. Progress
+is independent for each character, planner, variant and author-provided paragon
+step. Completion counts show the current board and selected step's entire setup.
+**Reset step checklist** affects only that scope and asks for confirmation.
+Writes are queued and atomic. Save failures remain visible with a Retry action.
+
+Refreshes retain completed nodes still allocated by the updated source, discard
+removed allocations and flag changed board setups for review. No point-by-point
+spending order is inferred from the author's allocations. This is a reference
+viewer with manual tracking: no build editing, automatic character detection or
+damage simulation is included.
+
+Viewer game metadata refreshes after 24 hours in a separate cache. Previously
+loaded references remain usable offline, with fetched/update dates and stale-data
+messages. Unknown identifiers stay visible with mapping notes; missing geometry
+falls back to the allocation list. Labels, ranks, rolls and levels come from
+Maxroll; tooltip formulas are not evaluated. Seasonal changes can leave item or
+affix names unmapped. Mapping does not certify a build or filter in-game.
+
+Preview data lives in Decky's `data/diablo-loot-filters-preview/cache` and
+`data/diablo-loot-filters-preview/viewer` directories. Removing a character deletes
+only that character's local checklists. Back up `viewer/characters.json` and
+`viewer/progress.json` if you want to keep them across removal of plugin data.
+
+## Develop the preview
+
+Use Node.js 22, pnpm 9.15.9, Python 3.11+, a C compiler and X11 development headers.
+
+```sh
+pnpm install --frozen-lockfile
+pnpm typecheck
+pnpm test
+pnpm build:preview
+pnpm package:preview
+```
+
+The beta ZIP and SHA-256 checksum are written to `artifacts/`. Feature-branch CI
+checks types, backend fixtures and progress persistence, frontend write queues,
+packaging and clipboard ownership under Xvfb. See [VALIDATION.md](VALIDATION.md)
+for the live Steam checks and remaining hardware/game checks.
+
+---
+
+# Loot-filter features inherited from v0.1.1
 
 Browse published Diablo IV loot filters by class and build, preview their rules,
 and copy an import code without leaving Steam game mode. You can also paste a
@@ -85,7 +181,10 @@ content bundles. It never executes downloaded JavaScript. Maxroll's planner
 endpoints are public but undocumented and may change. Provider failures appear
 in the panel; generated and previously cached filters remain usable.
 
-## Development
+## Stable development
+
+These commands apply to the `v0.1.1` checkout. On `feature/build-viewer`, use
+the preview build/package commands above.
 
 Use Node.js 22, pnpm 9.15.9, Python 3.11+, a C compiler and X11 development headers.
 On Debian/Ubuntu the helper needs `libx11-dev`; on Arch/CachyOS use `libx11` and

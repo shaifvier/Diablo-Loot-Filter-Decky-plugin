@@ -8,6 +8,7 @@
 .aws/
 node_modules/
 dist/
+dist-preview/
 out/
 artifacts/
 __pycache__/

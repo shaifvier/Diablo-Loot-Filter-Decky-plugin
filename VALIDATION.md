@@ -1,3 +1,82 @@
+# Preview 0.2.0-beta.1 validation
+
+Checked on 2026-10-08, CachyOS, gamescope, Decky Loader v3.2.9, Steam React 19.1.1.
+Branch: `feature/build-viewer`, based on `v0.1.1`. Stable installation retained.
+
+## Automated checks
+
+- TypeScript checking and production preview Rollup build.
+- 34 offline Python tests, including the previous 21 loot-filter/clipboard tests.
+  New tests compare every Blood Wave and Rain of Arrows variant's skill ranks,
+  upgrades, connections and paragon allocation sets against current fixtures.
+  Zero-based board indexing, all four rotations, board order, glyphs/levels,
+  separate tempering, readable common-node names and missing-geometry/identifier
+  fallbacks are covered.
+- Independent character, planner, variant and source-step checklists; restart
+  persistence, reset, deletion, atomic save failure and changed-build reconciliation.
+  Removed nodes are discarded, common completed nodes retained and changes flagged
+  until reviewed. Source step names are preserved without adding a spending order.
+- Cached references work offline with expired game metadata or only a saved
+  projection. Fresh viewer metadata is reused for 24 hours. Provider failures
+  preserve the cached reference and carry a stale-data message.
+- Three Node tests cover late variant responses, retained viewer preferences,
+  queued rapid checklist writes, switching characters during writes and retrying
+  failed saves. Failed intent and errors remain available when returning to a
+  character during the same plugin session.
+- Preview seed copies selected public cache files once, excludes character data
+  and retains independent writes. Packaging checks its exact frontend identity.
+- Feature-branch CI repeats these checks, builds the preview ZIP and tests the X11
+  helper under Xvfb with independent UTF8_STRING/STRING reads.
+
+## Live Steam and gamescope checks
+
+- Both **Diablo Loot Filters** and **Diablo Loot Filters Preview** appear in Decky.
+  SHA-256 comparison of all 26 tracked installed stable files shows no changes.
+  The stable runtime cache also remains unchanged after preview load, generation,
+  checklist writes and clipboard copying.
+- Preview starts in Decky's embedded Python, seeds Blood Wave and Rain of Arrows
+  from copies of the stable cache and loads their normalized references through
+  Decky's real RPC. Viewer game metadata reports version `3.1.3.73224`.
+- Saved build selection and the filter-detail **View source build** action open
+  the independent full-screen route. Gear, Skills and Paragon render for both
+  builds. Rain of Arrows shows its six source-equipped skills and Devious glyph;
+  Blood Wave shows its source skill bar and Corporeal glyph at level 100.
+- All three tabs checked at **1280×800** and **1920×1080** in Steam's real Chromium
+  UI using viewport emulation. Header/footer fit clear of Steam's chrome. Only
+  the active diagram renders; Gear contains no map nodes. Source steps and boards
+  remain selectable through native Steam dropdowns.
+- Native Steam focus targets and spatial navigation: geometric Down moves from
+  Blood Wave's node 10 to node 31, updates the inspector and reveals the selection.
+  Registered tab/zoom/fit/mark/return handlers were exercised programmatically.
+  Node mouse clicks open native Steam detail modals, which receive focus; closing
+  details retains the viewer. Zoom retains the selected node in view.
+- An allocated paragon node was marked via the registered X handler, persisted
+  and remained completed after preview reinstallation. Source-step switching
+  shows independent counts. Automated tests cover other characters and resets.
+- Preview regression: Necromancer remains selected; Blood Wave is offered and
+  stays selected in Build. A search with no matches clears correctly. The ninth
+  Blood Wave Medium rule becomes fully visible when its native target is focused.
+- The real generation button creates a Rain of Arrows Endgame highlight filter
+  with 15 rules, no Hide rules, and diagnostics for unmapped seasonal items.
+- The real Copy button transfers the exact 1,520-character, nine-rule Blood Wave
+  Medium code to `:0` (Steam) and `:1` (Battle.net/NonSteamLaunchers Diablo).
+  Independent UTF8_STRING and STRING reads match after closing Decky.
+- No game files, launcher configuration or Proton prefixes were changed.
+
+## Remaining acceptance checks
+
+- Physical controller completion of all viewer controls is awaiting the user's
+  feedback. Scripted native focus/handler checks do not establish every hardware
+  input path. A physical Steam Deck has not been tested.
+- The directly installed Steam edition is unavailable for an in-game test here.
+  Preview paste acceptance inside Diablo's dialog was not repeated; exact code
+  transport is verified. Prior stable behavior was reported working by the user.
+- Some current seasonal item and affix names remain unmapped and show identifiers
+  with diagnostics. Tooltip formulas are not evaluated; this is a reference
+  viewer, not a calculation of character bonuses or damage.
+
+---
+
 # Release 0.1.1 validation
 
 Checked on 2026-10-08, CachyOS, gamescope, Decky Loader v3.2.9, Steam React 19.1.1.

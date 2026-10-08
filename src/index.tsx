@@ -2,6 +2,8 @@ import { ButtonItem, DropdownItem, Focusable, PanelSection, PanelSectionRow, Tex
 import { callable, definePlugin, toaster } from "@decky/api";
 import { Component, useEffect, useRef, useState, useSyncExternalStore, type ComponentType, type CSSProperties, type ReactNode, type ErrorInfo, type RefAttributes } from "react";
 import { FaGem } from "react-icons/fa";
+import manifest from "@decky/manifest";
+import { openBuildViewer, registerViewer, removeViewer, SavedBuilds } from "./viewer/Viewer";
 import type { Build, Catalogue, CopyResult, FilterDetail, FilterSummary, Reply, RulePreview } from "./types";
 
 const listFilters = callable<[refresh: boolean], Reply<Catalogue>>("list_filters");
@@ -58,7 +60,7 @@ const panelState = {
   detail: null as FilterDetail | null, query: "", className: "Any", buildName: "Any",
   stage: "Any", strictness: "Any", season: "Any", advanced: false, limit: 12,
   url: "", build: null as Build | null, variant: 0, strict: false, name: "",
-  showCode: false, copyStatus: null as string | null,
+  showCode: false, copyStatus: null as string | null, showSaved: false,
 };
 const panelListeners = new Set<() => void>();
 function subscribePanel(listener: () => void) {
@@ -112,6 +114,7 @@ function Content() {
   const [name, setName] = usePanelState("name");
   const [showCode, setShowCode] = usePanelState("showCode");
   const [copyStatus, setCopyStatus] = usePanelState("copyStatus");
+  const [showSaved, setShowSaved] = usePanelState("showSaved");
   const mounted = useRef(true);
 
   async function run(action: () => Promise<void>) {
@@ -174,6 +177,8 @@ function Content() {
         </ButtonItem></PanelSectionRow>}
       {busy && <Note>Working…</Note>}
       {error && <Note><span style={{ color: "#ffb5a8" }}>{error}</span></Note>}
+      {!detail && <PanelSectionRow><ButtonItem onClick={() => setShowSaved(!showSaved)}>{showSaved ? "Hide saved builds" : "Saved builds · full-screen viewer"}</ButtonItem></PanelSectionRow>}
+      {showSaved && !detail && <PanelSectionRow><SavedBuilds /></PanelSectionRow>}
     </PanelSection>
 
     {detail ? <>
@@ -191,6 +196,10 @@ function Content() {
           <div>Unmapped gear remains visible in Highlight mode.</div>
         </div></Note>}
         <PanelSectionRow><ButtonItem disabled={busy} layout="below" onClick={() => void copy()}>Copy import code</ButtonItem></PanelSectionRow>
+        {detail.sourceName === "Maxroll" && <PanelSectionRow><ButtonItem disabled={busy} onClick={() => void run(async () => {
+          const source = unwrap(await loadBuild(detail.sourceUrl));
+          await openBuildViewer(source.id, source.activeVariant);
+        })}>View source build · full screen</ButtonItem></PanelSectionRow>}
         {copyStatus && <Note><span style={{ color: gold }}>{copyStatus}</span></Note>}
         <Note>In Diablo: Options → Gameplay → Loot Filter → New Filter → Import Loot Filter. Paste with Ctrl+V or the Steam keyboard’s Paste key, then save and activate the filter.</Note>
         <PanelSectionRow><ButtonItem onClick={() => setShowCode(!showCode)}>{showCode ? "Hide import code" : "Show import code"}</ButtonItem></PanelSectionRow>
@@ -235,6 +244,7 @@ function Content() {
           <Note><strong style={{ color: gold }}>{build.name}</strong><br />{build.className} · {build.season} · fetched {date(build.fetchedAt)}{build.stale ? " · Cached" : ""}</Note>
           {build.error && <Note>{build.error}</Note>}
           <PanelSectionRow><DropdownItem label="Variant" selectedOption={variant} rgOptions={build.variants.map(v => ({ label: v.name, data: v.id }))} onChange={option => setVariant(Number(option.data))} /></PanelSectionRow>
+          <PanelSectionRow><ButtonItem disabled={busy} onClick={() => void openBuildViewer(build.id, variant)}>View build · full screen</ButtonItem></PanelSectionRow>
           <PanelSectionRow><TextField label="Filter name" description="Optional · up to 30 characters" value={name} onChange={e => setName(e.target.value.slice(0, 30))} /></PanelSectionRow>
           <PanelSectionRow><ToggleField label="Strict hiding" description={strict ? "Hide gear outside this build. Requires complete mappings." : "Highlight matches; keep other gear visible."} checked={strict} onChange={setStrict} /></PanelSectionRow>
           <PanelSectionRow><ButtonItem disabled={busy} onClick={() => void run(async () => {
@@ -253,10 +263,13 @@ function Content() {
   </>;
 }
 
-export default definePlugin(() => ({
-  name: "Diablo Loot Filters",
-  titleView: <div className={staticClasses.Title}>Diablo Loot Filters</div>,
+export default definePlugin(() => {
+  registerViewer();
+  return {
+  name: manifest.name,
+  titleView: <div className={staticClasses.Title}>{manifest.name}</div>,
   content: <PanelBoundary><Content /></PanelBoundary>,
   icon: <FaGem />,
-  onDismount() { /* Backend owners survive panel closure and stop on plugin unload. */ },
-}));
+  onDismount() { removeViewer(); /* Backend owners survive panel closure. */ },
+};
+});

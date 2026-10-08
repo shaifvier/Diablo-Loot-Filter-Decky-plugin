@@ -1,7 +1,7 @@
 name: Build and test
 on:
   push:
-    branches: [main]
+    branches: [main, 'feature/build-viewer']
     tags: ['v*']
   pull_request:
 permissions:
@@ -25,10 +25,10 @@ jobs:
       - run: pnpm install --frozen-lockfile
       - run: pnpm typecheck
       - run: pnpm test
-      - run: pnpm build
-      - run: pnpm package
+      - run: pnpm build:preview
+      - run: pnpm package:preview
       - run: xvfb-run -a python3 tests/check_clipboard.py
       - uses: actions/upload-artifact@v4
         with:
-          name: diablo-loot-filters
-          path: artifacts/*
+          name: diablo-loot-filters-preview
+          path: artifacts/diablo-loot-filters-preview-*
